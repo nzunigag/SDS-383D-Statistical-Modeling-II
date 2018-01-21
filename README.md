@@ -1,6 +1,7 @@
 # SDS 383D Statistical Modeling II
 
-This course is a PhD-level course on statistical modeling, focusing on a hierarchical Bayesian framework, at The University of Texas at Austin, [Department of Statistics and Data Sciences](https://stat.utexas.edu/), Spring 2018.
+This course is a PhD-level course on statistical modeling, focusing on a hierarchical Bayesian framework.
+The University of Texas at Austin, [Department of Statistics and Data Sciences](https://stat.utexas.edu/), Spring 2018.
 
 My name is Natalia Zuniga-Garcia. I'm a Ph.D. Student in [Transportation Engineering](http://caee.utexas.edu/research/specialities/trans) in the Department of Civil, Architectural and Environmental Engineering. 
 
