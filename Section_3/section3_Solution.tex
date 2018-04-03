@@ -228,8 +228,7 @@ Another choice for $g^{-1}(\theta)$ might be the logit function, $\frac{1}{1+e^{
 	 \sum^{N}_{i=1} \left[  (1-y_i) x_i\beta + \log(1+e^{-x_i\beta}) \right]  \bigg\} 
 	$$
 	
-	Solving in R - presented in the script \textit{Section3-2-to-3-5.R} - the results is: $\hat{\beta} = $
-	
+	Solving in R - presented in the script \textit{Section3-2-to-3-5.R} - the results is: $\hat{\beta} = -0.01101471 $
 	
 	
 	
@@ -241,6 +240,14 @@ Another choice for $g^{-1}(\theta)$ might be the logit function, $\frac{1}{1+e^{
 {\color{blue}
 	\textbf{Solution}
 	
+Solving in R - presented in the script \textit{Section3-2-to-3-5.R} - the results is:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=.8\linewidth]{Section3R/Figures/P3_3_logl.png}
+		\caption{Negative Log-Likelihood vs. Beta values}
+	\end{center}
+\end{figure}
 	
 } % Color Blue ends
 
@@ -288,10 +295,15 @@ $$H_{ij} = \frac{\delta^2}{\delta x_i \delta x_j}\log P^*(x)\Big\rvert_{x=x^*}$$
 
 {\color{blue}
 	\textbf{Solution}
-	
+
+Now, using matrix form:
+
+$$
+\frac{\delta^2}{\delta  \beta \delta \beta^T }\ln (p(\beta)) \propto
+-I - \sum_{i=1}^{N} \frac{x_i x_i^T e^{-x_i^T \beta}}{(1+e^{-x_i^T \beta})^2} 
+$$
 	
 } % Color Blue ends
-
 
   Let's try the same thing with a Poisson likelihood. Here, the obvious transformation is to let $g^{-1}(\theta) = e^{\theta}$, i.e.
 
@@ -309,7 +321,15 @@ $$\begin{aligned}
 {\color{blue}
 	\textbf{Solution}
 	
+		We can observe from the histogram of \textit{Actions} that the distribution is highly skewed. In addition, we know that the Poison distribution has $E[x]=Var[x]=\lambda$, however, for this data we have $E[x]=15.93 $ and $Var[x]=460.91$ so the difference is very high.
 	
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=.8\linewidth]{Section3R/Figures/P3_6_hist.png}
+			\caption{Histogram of \textit{Actions}}
+		\end{center}
+	\end{figure}
+
 } % Color Blue ends
 
   
@@ -317,22 +337,10 @@ $$\begin{aligned}
     Let's assume our only covariate of interest is GRADE\footnote{I have manually replaced Kindergarten and Pre-K with Grades 0 and -1, respectively.} and put a normal prior on $\beta$. Using a Laplace approximation and an appropriately vague prior, find  95\% marginal credible intervals for the entries of $\beta$. You'll probably want to use an intercept.
   \end{exercise}
 
-{\color{blue}
-	\textbf{Solution}
-	
-	
-} % Color Blue ends
-
 
   \begin{exercise}[Optional]
     Repeat the analysis using a set of variables that interest you.
   \end{exercise}
-
-{\color{blue}
-	\textbf{Solution}
-	
-	
-} % Color Blue ends
 
 
       Even though we don't have conjugacy, we can still use MCMC methods -- we just can't use our old friend the Gibbs sampler. Since this isn't an MCMC course, let's use STAN, a probabilistic programming language available for R, python and Matlab. I'm going to assume herein that we're using RStan, and give appropriate scripts; it should be fairly straightforward to use if you're an R novice, or if you want to use a different language, there are hints on translating to PyStan at \\ \texttt{http://pystan.readthedocs.io/en/latest/differences\_pystan\_rstan.html} and info on MatlabStan (which seems much less popular) at \texttt{http://mc-stan.org/users/interfaces/matlab-stan}.
@@ -343,34 +351,16 @@ $$\begin{aligned}
 {\color{blue}
 	\textbf{Solution}
 	
+	Results are: $\beta_{int} = 0.05026685$ and $\beta_{grade} = 2.389339$. The trace-plots are shown as follows,
+	
+		\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=1.2\linewidth]{Section3R/Figures/P3_9_trace.png}
+			\caption{Trace plots}
+		\end{center}
+	\end{figure}
 	
 } % Color Blue ends
-
-  
-  \begin{exercise}
-    Consider ways you might improve your regression (still, using the censored data) - while staying in the GLM framework.  Ideas might include hierarchical error modeling (as we looked at in the last set of exercises), interaction terms... or something else! Looking at the data may give you inspiration. Implement this in STAN.
-  \end{exercise}
-
-
-{\color{blue}
-	\textbf{Solution}
-	
-	
-} % Color Blue ends
-
- 
-  
-  \begin{exercise}
-    We are throwing away a lot of information by not using the censored data. Come up with a strategy, and write down how you would alter your model/sampler. Bonus points for actually implementing it in STAN (hint: look up the section on censored data in the STAN manual).
-  \end{exercise}
-
-
-{\color{blue}
-	\textbf{Solution}
-	
-	
-} % Color Blue ends
-
 
   \bibliographystyle{apalike}
   \bibliography{course}

@@ -11,4 +11,11 @@ tea$N<-nrow(uncensored_data)
 fileName <- "poisson.stan"
 stan_code <- readChar(fileName, file.info(fileName)$size)
 resStan<-stan(model_code=stan_code,data=tea,chains=3,iter=1500,warmup=500,thin=10)
-traceplot(resStan, pars = c("beta"), inc_warmup = FALSE) #set inc_warmup = TRUE to see burn in
+
+png(filename=paste('P3_9_trace.png'),width=30,height=15,units="cm",res=200)
+traceplot(resStan, inc_warmup = FALSE) #set inc_warmup = TRUE to see burn in
+dev.off()
+
+params <- extract(resStan)
+b_int <- colMeans(params$beta)[1]
+b_grade <- colMeans(params$beta)[2]

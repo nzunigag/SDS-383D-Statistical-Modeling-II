@@ -1,7 +1,6 @@
 # Questions 3.2 to 3.5 Modeling non-Gaussian observations
 rm(list = ls())
 # Set seed for reproducible results
-set.seed(2112)
 library(tidyverse)
 
 #---------------------------------------------------------------------
@@ -11,24 +10,35 @@ titanic <- read_csv('titanic.csv')
 summary(titanic)
 
 titanic <- na.omit(titanic) # Age has 447 NAs
-y <- as.matrix(ifelse(titanic$Survived == "Yes",1,0))
-X <- as.matrix(scale(titanic$Age))
-plot(X, y)
-n <- nrow(y)
-p <- ncol(X)
+
+x <- matrix(titanic$Age, nrow(titanic), 1)
+y <- as.numeric(titanic$Survived == "Yes")
+
 
 #---------------------------------------------------------------------
+# Exercise 3.2
 
-sig <- function(a){
-  # Sigmoid Function of a
-  1 / (1 + exp(a))
+log_posterior <- function(beta, X, y) {
+  y %*% log(1/(1+exp(-X %*% beta))) + (1 - y) %*% log(1 - (1/(1+exp(-X %*% beta)))) - 0.5 * t(beta) %*% beta
 }
 
-n.log.lik <- function(y, X, beta){
-  # Negative log likelihood of the posterior
-  (beta * beta) / 2 + 
-    sum((1 - y) * X * beta + log(1 + exp(-(X * beta)))) 
+map <- optim(0, function(beta) -log_posterior(beta, x, y), method = "Brent", lower = -1, upper = 1)
+map$par
+
+# [1] -0.01101471
+
+#---------------------------------------------------------------------
+# Exercise 3.3
+
+betas <- seq(-0.2, 0.2, len = 50)
+log_posterior_betas <- rep(1, 50)
+for (i in 1:50) {
+  log_posterior_betas[i] <- -log_posterior(betas[i], x, y)
 }
 
-MAP <- optim(0, function(beta) - MAP(y, X, beta), method = "Brent", lower = -1, upper = 1)
-MAP$par 
+png(filename=paste('P3_3_logl.png'),width=15,height=10,units="cm",res=200)
+ggplot() + geom_line(aes(betas, log_posterior_betas)) +
+  geom_point(aes(-0.01101471, 511.4713)) + 
+  ylab("Negative Log-Likelihood") + xlab("Beta")
+dev.off()
+
